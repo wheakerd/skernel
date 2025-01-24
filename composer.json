@@ -1,0 +1,27 @@
+{
+    "name": "super-kernel/parser",
+    "type": "library",
+    "require": {
+        "nikic/php-parser": "^5.3",
+        "symfony/console": "7.3.x-dev",
+        "symfony/http-kernel": "7.3.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SuperKernel\\Parser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SuperKernel\\ParserDev\\": "dev-src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wheakerd",
+            "email": "wheakerd@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
