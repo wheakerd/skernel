@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use Composer\Autoload\ClassLoader;
 use Exception;
@@ -11,7 +11,7 @@ use PhpParser\PrettyPrinter\Standard;
 
 /**
  * @ConfigProvider
- * @\SuperKernel\Parser\ConfigProvider
+ * @\Wheakerd\SKernel\ConfigProvider
  */
 final class ConfigProvider
 {

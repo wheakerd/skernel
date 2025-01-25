@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use Closure;
 use SplObjectStorage;
 
 /**
  * @ProxyManager
- * @\SuperKernel\Parser\ProxyManager
+ * @\Wheakerd\SKernel\ProxyManager
  */
 final class ProxyManager
 {

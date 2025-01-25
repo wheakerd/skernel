@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\ParserDev;
+namespace Wheakerd\SKernelDev;
 
 use Exception;
 use FilesystemIterator;
@@ -89,11 +89,7 @@ final class Application extends Command
             }
         }
 
-        file_put_contents($this->path . DIRECTORY_SEPARATOR . 'index.php', '
-        <?php
-        var_dump(123456);
-        ');
-
+        file_put_contents($this->path . DIRECTORY_SEPARATOR . 'index.php', $this->getIndex());
 
         $this->build();
         $this->clear();
@@ -149,13 +145,33 @@ final class Application extends Command
 
     private function build(): void
     {
+        $distDir = ROOT_PATH . '/dist';
+        is_dir($distDir) && $this->clear($distDir);
+        mkdir($distDir, 0777, true);
+
         try {
-            $phar = new Phar('parser.phar', 0, 'example.phar');
+            $phar = new Phar($distDir . '/skernel.phar');
+
+            $phar->setStub("<?php\r
+Phar::mapPhar('skernel.phar');\r
+require 'phar://skernel.phar/index.php';\r
+__HALT_COMPILER(); ?>");
+//            $phar->setStub($this->getStub());
+            $phar->startBuffering();
+
             $phar->buildFromDirectory($this->path);
-            $phar->setStub($this->getStub());
+            $phar->stopBuffering();
             $phar->compress(Phar::GZ);
 
-            $this->symfonyStyle->success("'parser.phar' was built successfully");
+            file_put_contents($distDir . '/skernel',
+                file_get_contents(ROOT_PATH . '/bin/micro.sfx')
+                . file_get_contents($distDir . '/skernel.phar.gz')
+            );
+            chmod($distDir . '/skernel', 0755);
+//            unlink($distDir . '/skernel.phar');
+//            unlink($distDir . '/skernel.phar.gz');
+
+            $this->symfonyStyle->success("'skernel' tool was built successfully");
         } catch (Exception $e) {
             $this->symfonyStyle->error("Error: " . $e->getMessage());
             $this->clear();
@@ -163,14 +179,14 @@ final class Application extends Command
         }
     }
 
-    private function getStub(): string
+    private function getIndex(): string
     {
         $mapper = '';
         foreach ($this->mapper as $key => $value) $mapper .= sprintf('\'%s\'=>\'%s\',', $key, $value);
 
-        return sprintf('
-<?php
-Phar::mapPhar();$mapper=[%s];spl_autoload_register(fn($class) => (isset($mapping[$class])) && require $mapping[$class]);
-__HALT_COMPILER(); ?>', $mapper);
+        return sprintf("<?php\r
+\$mapper=[%s];\r
+spl_autoload_register(fn(\$class) => (isset(\$mapper[\$class])) && require \$mapper[\$class]);\r
+new Wheakerd\SKernel\Application;", $mapper);
     }
 }

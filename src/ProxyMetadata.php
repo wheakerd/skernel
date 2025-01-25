@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 /**
  * @ProxyMetadata
- * @\SuperKernel\Parser\ProxyMetadata
+ * @\Wheakerd\SKernel\ProxyMetadata
  */
 final class ProxyMetadata
 {

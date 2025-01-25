@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Contract;
+namespace Wheakerd\SKernel\Contract;
 
 /**
  * The annotation class must implement this interface to ensure access to the visitor behavior of the annotation class.

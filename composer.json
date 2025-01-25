@@ -9,12 +9,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "SuperKernel\\Parser\\": "src/"
+            "Wheakerd\\SKernel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SuperKernel\\ParserDev\\": "dev-src/"
+            "Wheakerd\\SKernelDev\\": "dev-src/"
         }
     },
     "authors": [

@@ -2,6 +2,6 @@
 .idea/
 composer.lock
 
+dist/
 *.phar
 *.gz
-run

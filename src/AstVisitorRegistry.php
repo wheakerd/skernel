@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use SplPriorityQueue;
 use const PHP_INT_MAX;
 
 /**
  * @AstVisitorRegistry
- * @\SuperKernel\Ast\AstVisitorRegistry
+ * @\Wheakerd\SKernel\Ast\AstVisitorRegistry
  */
 final class AstVisitorRegistry
 {

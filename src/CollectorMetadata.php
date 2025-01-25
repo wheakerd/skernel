@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use PhpParser\Node\AttributeGroup;
 
 /**
  * @CollectorMetadata
- * @\SuperKernel\Parser\CollectorMetadata
+ * @\Wheakerd\SKernel\CollectorMetadata
  */
 final class CollectorMetadata
 {

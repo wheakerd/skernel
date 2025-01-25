@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Abstract;
+namespace Wheakerd\SKernel\Abstract;
 
 /**
  * @MetadataCollector

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 /**
  * @ProxyTrait
- * @\SuperKernel\Parser\ProxyTrait
+ * @\Wheakerd\SKernel\ProxyTrait
  */
 trait ProxyTrait
 {

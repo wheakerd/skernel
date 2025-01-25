@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use Composer\Autoload\ClassLoader;
 use Exception;
@@ -12,7 +12,7 @@ use PhpParser\PrettyPrinter\Standard;
 
 /**
  * @Parser
- * @\SuperKernel\Parser\Parser
+ * @\Wheakerd\SKernel\Parser
  */
 final class Parser
 {

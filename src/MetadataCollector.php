@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use Closure;
 use ReflectionClass;
 
 /**
  * @MetadataCollector
- * @\SuperKernel\Parser\MetadataCollector
+ * @\Wheakerd\SKernel\MetadataCollector
  */
 final class MetadataCollector
 {

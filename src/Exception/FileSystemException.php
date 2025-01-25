@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Exception;
+namespace Wheakerd\SKernel\Exception;
 
 use Exception;
 
 /**
  * @FileSystemException
- * @\SuperKernel\Parser\Exception\FileSystemException
+ * @\Wheakerd\SKernel\Exception\FileSystemException
  */
 final class FileSystemException extends Exception
 {

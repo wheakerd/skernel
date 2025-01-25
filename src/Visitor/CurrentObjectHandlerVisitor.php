@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Visitor;
+namespace Wheakerd\SKernel\Visitor;
 
 /**
  * @CurrentObjectHandlerVisitor
- * @\SuperKernel\Parser\Visitor\CurrentObjectHandlerVisitor
+ * @\Wheakerd\SKernel\Visitor\CurrentObjectHandlerVisitor
  */
 final class CurrentObjectHandlerVisitor
 {

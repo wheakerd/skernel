@@ -1,0 +1,17 @@
+<?php
+declare(strict_types=1);
+ini_set('display_errors', 'on');
+ini_set('display_startup_errors', 'on');
+
+error_reporting(E_ALL);
+
+!defined('ROOT_PATH') && define('ROOT_PATH', dirname(__DIR__));
+
+require ROOT_PATH . '/vendor/autoload.php';
+
+/** @noinspection PhpUnhandledExceptionInspection */
+(function () {
+    $application = new Symfony\Component\Console\Application;
+    $application->add(new Wheakerd\SKernelDev\Application);
+    return $application;
+})()->run();

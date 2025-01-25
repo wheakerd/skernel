@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Visitor;
+namespace Wheakerd\SKernel\Visitor;
 
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -18,7 +18,7 @@ use PhpParser\NodeVisitorAbstract;
 
 /**
  * @ClassHandlerVisitor
- * @\SuperKernel\Di\Parser\ClassHandlerVisitor
+ * @\Wheakerd\SKernel\Visitor\ClassHandlerVisitor
  */
 final class ClassHandlerVisitor extends NodeVisitorAbstract
 {

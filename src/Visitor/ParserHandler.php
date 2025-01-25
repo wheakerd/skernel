@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser\Visitor;
+namespace Wheakerd\SKernel\Visitor;
 
 use PhpParser\Modifiers;
 use PhpParser\Node\Arg;
@@ -52,7 +52,7 @@ final class ParserHandler extends NodeVisitorAbstract
     {
         if ($node instanceof Class_) {
             return new Expression(
-                new StaticCall(new Name('\SuperKernel\Parser\ProxyManager'), 'insert', [
+                new StaticCall(new Name('\Wheakerd\SKernel\ProxyManager'), 'insert', [
                     new ClassConstFetch(new Name($this->classname), 'class'),
                     new Arg(new Closure([
                         'stmts' => [

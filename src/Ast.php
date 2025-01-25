@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SuperKernel\Parser;
+namespace Wheakerd\SKernel;
 
 use PhpParser\Node\Stmt;
 use PhpParser\NodeTraverser;
