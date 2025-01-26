@@ -28,61 +28,23 @@ final class ConfigProvider
         }
     }
 
-    private string $tempDirectory;
+    private ?string $workDir = null;
 
-    /**
-     * @param string $runtimePath
-     * @param array $filterNameSpace
-     * @throws Exception
-     */
-    public function __construct()
+    public function getArguments()
     {
-        var_dump($_SERVER['argv']);die;
-//        if (!is_writable($runtimePath)) {
-//            throw new Exception('Runtime path "' . $runtimePath . '" is not writable.');
-//        }
-//        $this->runtimePath = realpath($runtimePath);
-//
-//        $this->tempDirectory = $this->runtimePath . DIRECTORY_SEPARATOR . md5(uniqid(more_entropy: true));
-//
-//        if (false === mkdir($this->tempDirectory, 0777, true)) {
-//            throw new Exception(
-//                sprintf(
-//                    'Failed to create directory "%s"', $this->tempDirectory
-//                )
-//            );
-//        }
+        return $_SERVER['argv'];
     }
 
-    /**
-     * @return array<string, string>
-     */
-    public function getCLassMap(): array
+    public function getWorkDir(): false|string
     {
-        /** @var ClassLoader $classLoader */
-        $classLoader = (function () {
-            $classLoader = ClassLoader::getRegisteredLoaders();
-            return reset($classLoader);
-        })();
-        return $classLoader->getClassMap();
-    }
-
-    public function isFilterNameSpace(string $namespace): bool
-    {
-        return array_any($this->filterNameSpace,
-            fn($name) => str_starts_with($name, $namespace)
-        );
-    }
-
-    public function write(string $path, string $content): void
-    {
-        $path = substr($this->runtimePath, strlen($path) + 1);
-
-//        var_dump($this->runtimePath, $path);
-    }
-
-    public function getMapper(): array
-    {
-        return [];
+        if (null === $this->workDir) {
+            $workDir = getcwd();
+            if (false === $workDir) {
+                echo "The working directory is not readable: %s\n";
+                exit(1);
+            }
+            $this->workDir = $workDir;
+        }
+        return getcwd();
     }
 }

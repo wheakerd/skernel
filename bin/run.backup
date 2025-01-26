@@ -1,0 +1,127 @@
+<?php
+declare(strict_types=1);
+ini_set('display_errors', 'on');
+ini_set('display_startup_errors', 'on');
+
+error_reporting(E_ALL);
+
+defined('ROOT_PATH') || define('ROOT_PATH', dirname(__DIR__));
+defined('DIST_PATH') || define('DIST_PATH', ROOT_PATH . '/dist');
+defined('TEMP_PATH') || define('TEMP_PATH', (function () {
+    $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . md5(uniqid(more_entropy: true));
+    is_dir($dir) || mkdir($dir, 0777, true);
+    return $dir;
+})());
+
+require ROOT_PATH . '/vendor/autoload.php';
+
+function getIndex(array $classMap): string
+{
+    $mapString = '';
+    foreach ($classMap as $key => $value) $mapString .= sprintf('\'%s\'=>\'%s\',', $key, $value);
+
+    return sprintf("<?php\r
+\$mapper=[%s];\r
+spl_autoload_register(fn(\$class) => (isset(\$mapper[\$class])) && require \$mapper[\$class]);\r
+new Wheakerd\SKernel\Application;", $mapString);
+}
+
+function clear(?string $path = null): void
+{
+    $path = $path ?? TEMP_PATH;
+    is_dir($path) || exit("'$path' is not a directory");
+
+    $files = array_diff(scandir($path), array('.', '..'));
+
+    foreach ($files as $file) {
+        $filepath = $path . DIRECTORY_SEPARATOR . $file;
+        is_dir($filepath) ? clear($filepath) : unlink($filepath);
+    }
+
+    rmdir($path);
+}
+
+//  check env
+(file_exists(ROOT_PATH . '/composer.json') && is_file(ROOT_PATH . '/composer.json'))
+|| exit('Composer file does not exist!');
+is_readable(ROOT_PATH) || exit('The current directory is not writable: ' . ROOT_PATH . ' !');
+is_writable(ROOT_PATH) || exit('The current directory is not readable: ' . ROOT_PATH . ' .');
+
+//  load composer.json
+$directories = array_values(
+    json_decode(
+        file_get_contents(ROOT_PATH . '/composer.json'), true
+    ) ['autoload']['psr-4'] ?? []
+);
+foreach ($directories as $directory) {
+    $directory = ROOT_PATH . DIRECTORY_SEPARATOR . $directory;
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+    foreach ($iterator as $file) {
+        if ($file->isFile() && $file->getExtension() === 'php') {
+            require_once $file->getRealPath();
+        }
+    }
+}
+
+//  start build
+is_dir(DIST_PATH) && clear(DIST_PATH);
+mkdir(DIST_PATH, 0777, true);
+
+//  handle phar
+$classes = [];
+
+$classes = array_merge($classes, get_declared_classes());
+$classes = array_merge($classes, get_declared_interfaces());
+
+$classMap = [];
+
+foreach ($classes as $class) {
+    try {
+        $reflection = new ReflectionClass($class);
+        if (false === $reflection->isUserDefined()) continue;
+
+        $classname = $reflection->getName();
+        $filename = str_replace('\\', '_', $classname) . '.php';
+
+        if (false === copy($reflection->getFileName(), TEMP_PATH . DIRECTORY_SEPARATOR . $filename)) {
+            exit('Could not copy file: ' . $filename);
+        }
+
+        $classMap [$classname] = $filename;
+    } catch (ReflectionException $e) {
+        exit("'$class' reflection exception: {$e->getMessage()} .");
+    }
+}
+
+file_put_contents(TEMP_PATH . DIRECTORY_SEPARATOR . 'index.php', getIndex($classMap));
+
+try {
+    $phar = new Phar(DIST_PATH . '/skernel.phar');
+
+    $phar->setStub("<?php\r
+Phar::mapPhar('skernel.phar');\r
+require 'phar://skernel.phar/index.php';\r
+    __HALT_COMPILER(); ?>");
+    $phar->startBuffering();
+
+    $phar->buildFromDirectory(TEMP_PATH);
+    $phar->stopBuffering();
+    $phar->compress(Phar::GZ);
+
+    file_put_contents(DIST_PATH . '/skernel',
+        file_get_contents(ROOT_PATH . '/bin/micro.sfx')
+        . file_get_contents(DIST_PATH . '/skernel.phar.gz')
+    );
+    chmod(DIST_PATH . '/skernel', 0755);
+    unlink(DIST_PATH . '/skernel.phar');
+    unlink(DIST_PATH . '/skernel.phar.gz');
+
+    echo "'skernel' tool was built successfully";
+    exit(0);
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit(1);
+}

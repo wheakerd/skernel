@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @HelpCommand
  * @\Wheakerd\SKernel\Command\HelpCommand
  */
-#[AsCommand(name: 'build', description: 'Shows build information')]
+#[AsCommand(name: 'build', description: 'Shows help')]
 final class BuildCommand extends Command
 {
     public function execute(InputInterface $input, OutputInterface $output): int

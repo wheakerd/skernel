@@ -12,11 +12,11 @@ use Wheakerd\SKernel\Command\HelpCommand;
  * @Application
  * @\Wheakerd\SKernel\Application
  */
-final class Application
+final class Application extends SymfonyApplication
 {
-    private ?SymfonyApplication $application = null {
+    private ?ConfigProvider $configProvider = null {
         get {
-            return $this->application ??= new SymfonyApplication;
+            return $this->configProvider ??= new ConfigProvider;
         }
     }
 
@@ -25,9 +25,10 @@ final class Application
      */
     public function __construct()
     {
-        $this->application->add(new HelpCommand);
-        $this->application->add(new BuildCommand);
+        parent::__construct('Skernel', 'v1.0.0');
+        $this->add(new BuildCommand);
+        $this->add(new HelpCommand);
 
-        $this->application->run();
+        $this->run();
     }
 }

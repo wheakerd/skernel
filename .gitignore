@@ -3,5 +3,3 @@
 composer.lock
 
 dist/
-*.phar
-*.gz

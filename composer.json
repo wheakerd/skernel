@@ -12,16 +12,37 @@
             "Wheakerd\\SKernel\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Wheakerd\\SKernelDev\\": "dev-src/"
-        }
-    },
     "authors": [
         {
             "name": "wheakerd",
             "email": "wheakerd@gmail.com"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "classes": [
+            "PhpParser\\NodeVisitor",
+            "PhpParser\\NodeVisitorAbstract",
+            "Symfony\\Component\\Console\\Application",
+            "Symfony\\Component\\Console\\Command\\Command",
+            "Symfony\\Contracts\\Service\\ResetInterface",
+            "Wheakerd\\SKernel\\Abstract\\MetadataCollector",
+            "Wheakerd\\SKernel\\Application",
+            "Wheakerd\\SKernel\\Ast",
+            "Wheakerd\\SKernel\\AstVisitorRegistry",
+            "Wheakerd\\SKernel\\CollectorMetadata",
+            "Wheakerd\\SKernel\\Command\\BuildCommand",
+            "Wheakerd\\SKernel\\Command\\HelpCommand",
+            "Wheakerd\\SKernel\\ConfigProvider",
+            "Wheakerd\\SKernel\\Exception\\FileSystemException",
+            "Wheakerd\\SKernel\\MetadataCollector",
+            "Wheakerd\\SKernel\\Parser",
+            "Wheakerd\\SKernel\\ProxyManager",
+            "Wheakerd\\SKernel\\ProxyMetadata",
+            "Wheakerd\\SKernel\\Visitor\\ClassHandlerVisitor",
+            "Wheakerd\\SKernel\\Visitor\\CurrentObjectHandlerVisitor",
+            "Wheakerd\\SKernel\\Visitor\\ParserHandler",
+            "Wheakerd\\SKernel\\Contract\\AnnotationInterface"
+        ]
+    }
 }
