@@ -1,0 +1,65 @@
+{
+    "name": "hyperf/hyperf-skeleton",
+    "type": "project",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=8.3",
+        "composer/composer": "^2.8",
+        "hyperf/command": "^3.1",
+        "hyperf/config": "^3.1",
+        "hyperf/engine": "^2.10",
+        "hyperf/event": "^3.1",
+        "hyperf/exception-handler": "^3.1",
+        "hyperf/framework": "^3.1",
+        "hyperf/guzzle": "^3.1",
+        "hyperf/logger": "^3.1",
+        "hyperf/memory": "^3.1",
+        "hyperf/phar": "^3.1",
+        "hyperf/process": "^3.1",
+        "nikic/php-parser": "^4.19",
+        "symfony/finder": "^7.3"
+    },
+    "require-dev": {
+        "hyperf/devtool": "^3.1",
+        "mockery/mockery": "^1.0",
+        "swoole/ide-helper": "^5.0"
+    },
+    "suggest": {
+        "ext-openssl": "Required to use HTTPS.",
+        "ext-json": "Required to use JSON.",
+        "ext-pdo": "Required to use MySQL Client.",
+        "ext-pdo_mysql": "Required to use MySQL Client.",
+        "ext-redis": "Required to use Redis Client."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.org"
+        },
+        {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        },
+        {
+            "type": "composer",
+            "url": "https://mirrors.tencent.com/composer/"
+        },
+        {
+            "type": "composer",
+            "url": "https://repo.huaweicloud.com/repository/php/"
+        }
+    ],
+    "config": {
+        "classmap-authoritative": true,
+        "optimize-autoloader": true,
+        "process-timeout": 0,
+        "sort-packages": true
+    }
+}
