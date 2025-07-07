@@ -4,17 +4,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Contract\ConfigProviderInterface;
-use App\Parser\ClassNameResolver;
 use App\Service\Phar\ClassMapAutoload;
-use Composer\ClassMapGenerator\ClassMapGenerator;
-use Composer\Factory;
-use Composer\IO\NullIO;
 use FilesystemIterator;
 use Hyperf\Command\Annotation\Command as AsCommand;
 use Hyperf\Command\Command as HyperfCommand;
 use Phar;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use RecursiveDirectoryIterator;
@@ -24,7 +18,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use Throwable;
 use function getcwd;
 
@@ -39,9 +32,9 @@ final class PackageCommand extends HyperfCommand
 //		private readonly ConfigProviderInterface $configProvider,
 //		NullIO        $nullIO,
 //		Factory       $factory,
-		ParserFactory                   $parserFactory,
-		private ClassMapAutoload        $classMapAutoload,
-		private ConfigProviderInterface $configProvider,
+		ParserFactory                            $parserFactory,
+		private readonly ClassMapAutoload        $classMapAutoload,
+		private readonly ConfigProviderInterface $configProvider,
 	)
 	{
 		parent::__construct();
@@ -134,8 +127,6 @@ final class PackageCommand extends HyperfCommand
 				$phar->addFile($file->getRealPath(), $localPath);
 			}
 		}
-
-		$phar->compress(Phar::GZ);
 
 		$phar->startBuffering();
 	}

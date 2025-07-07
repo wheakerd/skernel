@@ -293,6 +293,19 @@ final class ClassMapAutoload
 	};
 	
 	spl_autoload_register([$autoloader,'autoload'], true, true);
+	
+	!defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__));
+	
+	// TODO: Self-called anonymous function that creates its own scope and keep the global namespace clean.
+	(function () {
+		Hyperf\Di\ClassLoader::init();
+		/** @var Psr\Container\ContainerInterface $container */
+		$container = require BASE_PATH . '/config/container.php';
+	
+		$application = $container->get(Hyperf\Contract\ApplicationInterface::class);
+		$application->run();
+	})();
+
 	__HALT_COMPILER(); ?>
 	EOF;
 
