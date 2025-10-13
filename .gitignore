@@ -1,0 +1,9 @@
+.idea/
+.git/
+runtime/
+vendor/
+.vscode/
+*.phar
+*.phar.gz
+composer.lock
+src/vendor

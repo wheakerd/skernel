@@ -1,0 +1,9 @@
+php-version: 8.4
+extensions: "ctype,curl,dom,fileinfo,filter,iconv,libxml,mbregex,mbstring,mysqlnd,openssl,pdo,pdo_mysql,pdo_pgsql,pgsql,phar,sqlite3,swoole,swoole-hook-odbc,swoole-hook-pgsql,swoole-hook-sqlite,tokenizer,xml,zlib"
+sapi: micro,cli
+debug: true
+download-options:
+    prefer-pre-built: true
+build-options:
+    with-upx-pack: true
+    enable-zts: true
