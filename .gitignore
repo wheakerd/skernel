@@ -1,0 +1,7 @@
+.idea/
+.git/
+.vscode/
+composer.lock
+bin/
+target/*
+vendor/

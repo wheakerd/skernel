@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -e
+
+# Target directory
+BIN_DIR="./bin"
+
+mkdir -p "$BIN_DIR"
+
+# ---------------------------
+# Function: download_and_extract
+# Arguments:
+#   1 - URL
+#   2 - Target file name
+#   3 - Path inside tar.gz to extract
+# ---------------------------
+download_and_extract() {
+    local url="$1"
+    local target="$BIN_DIR/$2"
+
+    if [ -f "$target" ]; then
+        echo "✅ $target already exists, skipping download"
+        return
+    fi
+
+    echo "⬇️ Downloading and extracting $2..."
+    curl -L "$url" | tar -xz -C "$BIN_DIR"
+    chmod +x "$target"
+    echo "✅ $2 download and extraction completed"
+}
+
+# ---------------------------
+# Function: download_and_pipe_php
+# Arguments:
+#   1 - URL
+#   2 - Target file name
+#   3 - PHP executable path
+# ---------------------------
+download_and_pipe_php() {
+    local url="$1"
+    local target="$BIN_DIR/$2"
+    local php_exec="$3"
+
+    if [ -f "$target" ]; then
+        echo "✅ $target already exists, skipping download"
+        return
+    fi
+
+    echo "⬇️ Installing $2 using downloaded PHP..."
+    curl -fsSL "$url" | "$php_exec" -- --install-dir="$BIN_DIR" --filename="$2"
+    chmod +x "$target"
+    echo "✅ $2 installed"
+}
+
+# ---------------------------
+# Main
+# ---------------------------
+
+# PHP CLI
+download_and_extract \
+    "https://dl.static-php.dev/static-php-cli/bulk/php-8.4.13-cli-linux-x86_64.tar.gz" \
+    "php" \
+    "php-8.4.13-cli-linux-x86_64/php"
+
+# SPC
+download_and_extract \
+    "https://dl.static-php.dev/static-php-cli/spc-bin/nightly/spc-linux-x86_64.tar.gz" \
+    "spc" \
+    "spc-linux-x86_64/spc"
+
+# skernel
+download_and_extract \
+    "https://github.com/wheakerd/skernel/releases/latest/download/skernel.tar.gz" \
+    "skernel" \
+    "skernel"
+
+# Composer
+download_and_pipe_php \
+    "https://getcomposer.org/installer" \
+    "composer" \
+    "$BIN_DIR/php"
