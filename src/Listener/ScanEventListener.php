@@ -130,10 +130,11 @@ final readonly class ScanEventListener implements ListenerInterface
 
 		$iterator = new AppendIterator();
 
-		$psr4Dirs = array_values($this->composer->getPackage()->getAutoload()['psr-4'] ?? []);
+		$autoloads = array_values($this->composer->getPackage()->getAutoload()['psr-4'] ?? []);
 
 		if ($event->requireDev) {
-			$psr4Dirs += array_values($this->composer->getPackage()->getDevAutoload()['psr-4'] ?? []);
+			$devAutoloads = array_values($this->composer->getPackage()->getDevAutoload()['psr-4'] ?? []);
+			$autoloads    = array_merge($autoloads, $devAutoloads);
 		}
 
 		// Add files under the project root directory (only one layer)
@@ -142,8 +143,8 @@ final readonly class ScanEventListener implements ListenerInterface
 
 		$iterator->append(new IteratorIterator($rootFilesOnly));
 
-		foreach ($psr4Dirs as $psr4Dir) {
-			$path = rtrim($this->configProvider->homeFolder . $psr4Dir, DIRECTORY_SEPARATOR);
+		foreach ($autoloads as $autoload) {
+			$path = rtrim($this->configProvider->homeFolder . $autoload, DIRECTORY_SEPARATOR);
 
 			if (!is_dir($path)) {
 				continue;
