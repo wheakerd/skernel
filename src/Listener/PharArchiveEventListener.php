@@ -37,7 +37,7 @@ final class PharArchiveEventListener implements ListenerInterface
 
 		$output->writeln('<info>Building phar archive...</info>');
 
-		$this->eventDispatcher->dispatch(new ScanEvent($output, $event->isProduction));
+		$this->eventDispatcher->dispatch(new ScanEvent($output, $event->requireDev));
 		
 		$this->eventDispatcher->dispatch(new AfterScanEvent());
 

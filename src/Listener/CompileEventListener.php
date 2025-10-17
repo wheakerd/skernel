@@ -104,7 +104,7 @@ final class CompileEventListener implements ListenerInterface
 		$iniFilename = $this->configProvider->homeFolder . 'php.ini';
 
 		if (!$this->filesystem->exists($iniFilename)) {
-			$output->writeln('<INFO>[INFO] </INFO> The ' . $iniFilename . ' file does not exist, skip Mount.');
+			$output->writeln('<info>[INFO] </info> The ' . $iniFilename . ' file does not exist, skip Mount.');
 			return;
 		}
 

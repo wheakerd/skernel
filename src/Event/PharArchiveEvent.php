@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PharArchiveEvent
 {
-	public function __construct(public OutputInterface $output, public bool $isProduction)
+	public function __construct(public OutputInterface $output, public bool $requireDev)
 	{
 	}
 }

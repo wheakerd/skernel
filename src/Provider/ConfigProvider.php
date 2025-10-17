@@ -19,23 +19,83 @@ final class ConfigProvider
 	}
 
 	private(set) ?string $targetFolder = null {
-		get => $this->targetFolder ??= $this->homeFolder . 'target' . DIRECTORY_SEPARATOR;
+		get {
+			if (null === $this->targetFolder) {
+				$folder = $this->homeFolder . 'target' . DIRECTORY_SEPARATOR;
+
+				if (!$this->filesystem->exists($folder)) {
+					$this->filesystem->mkdir($folder);
+				}
+
+				$this->targetFolder = $folder;
+			}
+
+			return $this->targetFolder;
+		}
 	}
 
 	private(set) ?string $cacheFolder = null {
-		get => $this->cacheFolder ??= $this->targetFolder . 'cache' . DIRECTORY_SEPARATOR;
+		get {
+			if (null === $this->cacheFolder) {
+				$folder = $this->targetFolder . 'cache' . DIRECTORY_SEPARATOR;
+
+				if (!$this->filesystem->exists($folder)) {
+					$this->filesystem->mkdir($folder);
+				}
+
+				$this->cacheFolder = $folder;
+			}
+
+			return $this->cacheFolder;
+		}
 	}
 
 	private(set) ?string $releaseFolder = null {
-		get => $this->releaseFolder ??= $this->targetFolder . 'release' . DIRECTORY_SEPARATOR;
+		get {
+			if (null === $this->releaseFolder) {
+				$folder = $this->targetFolder . 'release' . DIRECTORY_SEPARATOR;
+
+				if (!$this->filesystem->exists($folder)) {
+					$this->filesystem->mkdir($folder);
+				}
+
+				$this->releaseFolder = $folder;
+			}
+
+			return $this->releaseFolder;
+		}
 	}
 
 	private(set) ?string $runtimeFolder = null {
-		get => $this->runtimeFolder ??= $this->targetFolder . 'runtime' . DIRECTORY_SEPARATOR;
+		get {
+			if (null === $this->runtimeFolder) {
+				$folder = $this->targetFolder . 'runtime' . DIRECTORY_SEPARATOR;
+
+				if (!$this->filesystem->exists($folder)) {
+					$this->filesystem->mkdir($folder);
+				}
+
+				$this->runtimeFolder = $folder;
+			}
+
+			return $this->runtimeFolder;
+		}
 	}
 
 	private(set) ?string $microSfxFolder = null {
-		get => $this->microSfxFolder ??= posix_getpwuid(posix_getuid())['dir'] . DIRECTORY_SEPARATOR . '.skernel' . DIRECTORY_SEPARATOR;
+		get {
+			if (null === $this->microSfxFolder) {
+				$folder = posix_getpwuid(posix_getuid())['dir'] . DIRECTORY_SEPARATOR . '.skernel' . DIRECTORY_SEPARATOR;
+
+				if (!$this->filesystem->exists($folder)) {
+					$this->filesystem->mkdir($folder);
+				}
+
+				$this->microSfxFolder = $folder;
+			}
+
+			return $this->microSfxFolder;
+		}
 	}
 
 	private(set) ?string $name = null {
@@ -47,7 +107,7 @@ final class ConfigProvider
 	}
 
 	private(set) ?string $binaryFilename = null {
-		get => $this->binaryFilename ??= $this->targetFolder . 'release' . DIRECTORY_SEPARATOR . $this->name;
+		get => $this->binaryFilename ??= $this->releaseFolder . $this->name;
 	}
 
 	private(set) ?string $pharFilename = null {

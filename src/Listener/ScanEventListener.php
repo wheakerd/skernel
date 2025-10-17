@@ -22,6 +22,7 @@ use SuperKernel\Contract\ListenerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Throwable;
 use function count;
 use function iterator_to_array;
 
@@ -52,14 +53,14 @@ final readonly class ScanEventListener implements ListenerInterface
 		$output->writeln('<info>[INFO]</info> Scanning packages...');
 
 		$runtimeDir          = $this->configProvider->runtimeFolder;
-		$lockedRepository    = $this->composer->getLocker()->getLockedRepository();
+		$lockedRepository    = $this->composer->getLocker()->getLockedRepository($event->requireDev);
 		$installationManager = $this->composer->getInstallationManager();
 
 		$runtimeComposerJsonFile = $runtimeDir . 'composer.json';
 
 		if ($this->filesystem->exists($runtimeComposerJsonFile)) {
 			$runtimeComposer            = Factory::create(new NullIO, $runtimeComposerJsonFile);
-			$runtimeLockedRepository    = $runtimeComposer->getLocker()->getLockedRepository();
+			$runtimeLockedRepository    = $runtimeComposer->getLocker()->getLockedRepository($event->requireDev);
 			$runtimeInstallationManager = $runtimeComposer->getInstallationManager();
 
 			foreach ($lockedRepository->getPackages() as $package) {
@@ -78,7 +79,12 @@ final readonly class ScanEventListener implements ListenerInterface
 					);
 
 					foreach ($iterator as $file) {
-						$this->scanner->scan($file, $event->isProduction, $package->getName());
+						try {
+							$this->scanner->scan($file, $event->requireDev, $package->getName());
+						}
+						catch (Throwable $throwable) {
+							$output->writeln("<error>[ERROR]</error> {$throwable->getMessage()}");
+						}
 					}
 
 					continue;
@@ -110,7 +116,12 @@ final readonly class ScanEventListener implements ListenerInterface
 				);
 
 				foreach ($iterator as $file) {
-					$this->scanner->scan($file, $event->isProduction, $package->getName());
+					try {
+						$this->scanner->scan($file, $event->requireDev, $package->getName());
+					}
+					catch (Throwable $throwable) {
+						$output->writeln("<error>[ERROR]</error> {$throwable->getMessage()}");
+					}
 				}
 			}
 		}
@@ -120,6 +131,10 @@ final readonly class ScanEventListener implements ListenerInterface
 		$iterator = new AppendIterator();
 
 		$psr4Dirs = array_values($this->composer->getPackage()->getAutoload()['psr-4'] ?? []);
+
+		if ($event->requireDev) {
+			$psr4Dirs += array_values($this->composer->getPackage()->getDevAutoload()['psr-4'] ?? []);
+		}
 
 		// Add files under the project root directory (only one layer)
 		$fs            = new FilesystemIterator($this->configProvider->homeFolder, FilesystemIterator::SKIP_DOTS);
@@ -151,7 +166,12 @@ final readonly class ScanEventListener implements ListenerInterface
 		foreach ($iterator as $file) {
 			$progressBar->advance();
 
-			$this->scanner->scan($file, $event->isProduction);
+			try {
+				$this->scanner->scan($file, $event->requireDev);
+			}
+			catch (Throwable $throwable) {
+				$output->writeln("<error>[ERROR]</error> {$throwable->getMessage()}");
+			}
 		}
 
 		$progressBar->finish();

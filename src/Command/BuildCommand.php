@@ -28,6 +28,7 @@ final class BuildCommand extends Command
 	{
 		return $this
 			->addOption('disable-binary', null, InputOption::VALUE_NONE, 'Disable binary build, Only build phar archive.')
+			->addOption('dev', null, InputOption::VALUE_NONE, 'Use require-dev requirement.')
 			->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode.');
 	}
 
@@ -39,7 +40,7 @@ final class BuildCommand extends Command
 			$output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
 		}
 
-		$this->eventDispatcher->dispatch(new PharArchiveEvent($output, true));
+		$this->eventDispatcher->dispatch(new PharArchiveEvent($output, $input->getOption('dev')));
 
 		if (!$input->getOption('disable-binary')) {
 			$this->eventDispatcher->dispatch(new CompileEvent($output));
