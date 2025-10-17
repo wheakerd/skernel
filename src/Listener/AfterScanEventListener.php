@@ -87,9 +87,9 @@ final readonly class AfterScanEventListener implements ListenerInterface
 
 		$stmts[] = new Expression(
 			new StaticCall(
-				new Name('Phar'), // 类名 Phar
-				'mapPhar',        // 方法名 mapPhar
-				[new Arg(new String_($this->configProvider->pharName . '.phar'))], // 参数 'skernel.phar'
+				new Name('Phar'),
+				'mapPhar',
+				[new Arg(new String_($this->configProvider->pharName))],
 			),
 		);
 
@@ -102,7 +102,7 @@ final readonly class AfterScanEventListener implements ListenerInterface
 					new Name('require_once'),
 					[
 						new Arg(
-							new String_('phar://' . $this->configProvider->pharName . '.phar/' . $file),
+							new String_('phar://' . $this->configProvider->pharName . '/' . $file),
 						),
 					],
 				),
@@ -116,7 +116,7 @@ final readonly class AfterScanEventListener implements ListenerInterface
 			$relative = ltrim(str_replace($this->configProvider->runtimeFolder, '', new Filesystem()->normalizePath($path)), '/\\');
 
 			$items[] = new ArrayItem(
-				new String_('phar://' . $this->configProvider->pharName . '.phar/' . $relative),
+				new String_('phar://' . $this->configProvider->pharName . '/' . $relative),
 				new ClassConstFetch(new Name($class), 'class'),
 			);
 		}
@@ -135,7 +135,7 @@ final readonly class AfterScanEventListener implements ListenerInterface
 			$subArrayItems = [];
 			foreach ($annotation as $item) {
 				$subArrayItems[] = new ArrayItem(
-					new ClassConstFetch(new Name('\\' . $item), 'class'), // 值
+					new ClassConstFetch(new Name('\\' . $item), 'class'),
 				);
 			}
 			// Use the original key value as the key for each subarray
