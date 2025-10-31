@@ -1,10 +1,85 @@
 #!/usr/bin/env bash
+# configure - detect OS and install required packages
+
 set -e
 
-# Target directory
-BIN_DIR="./bin"
+TOOLS_DIR="tools"
+mkdir -p "$TOOLS_DIR"
 
-mkdir -p "$BIN_DIR"
+get_os() {
+    case "$(uname)" in
+        Darwin)
+            echo "macos"
+            ;;
+        Linux)
+            echo "linux"
+            ;;
+        *)
+            echo "Unsupported OS: $(uname). Only Linux and macOS are supported."
+            exit 1
+            ;;
+    esac
+}
+
+get_arch() {
+    local arch=$(uname -m)
+
+    case "$arch" in
+        x86_64)
+            echo "x86_64"
+            ;;
+        aarch64|arm64)
+            echo "aarch64"
+            ;;
+        *)
+            echo "Unsupported architecture: $arch. Only x86_64 and aarch64 are supported."
+            exit 1
+            ;;
+    esac
+}
+
+get_php_version() {
+    local version
+    local composer_json="sources/composer.json"
+
+    local version=$(jq -r '.require.php' "$composer_json" | sed -E 's/^[^\d]*([0-9]+\.[0-9]+).*$/\1/')
+
+    if [ -z "$version" ]; then
+        echo "PHP version not found or invalid in $composer_json"
+        exit 1
+    fi
+
+    echo "$version"
+}
+
+get_download_link() {
+    local json_url="$1"
+    local php_type="$2"
+    local os_type="$3"
+    local arch_type="$4"
+    local php_version="$5"
+
+    local JSON=$(curl -fsSL "$json_url")
+
+    local DOWNLOAD_URL=$(echo "$JSON" | jq -r --arg OS "$os_type" --arg ARCH "$arch_type" --arg TYPE "$php_type" --arg VER_PREFIX "$php_version" '
+        [ .[]
+          | select(.name | test("-" + $TYPE + "-" + $OS + "-" + $ARCH + "\\.tar\\.gz$"))
+          | select(.name | test("^php-" + $VER_PREFIX + "\\.[0-9]+"))
+        ]
+        | reverse
+        | .[0]
+        | .full_path
+    ')
+
+    if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+        echo "No matching PHP build found for OS=$os_type, ARCH=$arch_type, Version=$php_version"
+        exit 1
+    fi
+
+    local PROTOCOL_DOMAIN=$(echo "$json_url" | grep -oP '^(https?://[^/]+)')
+
+    echo "$PROTOCOL_DOMAIN$DOWNLOAD_URL"
+}
 
 # ---------------------------
 # Function: download_and_extract
@@ -15,7 +90,10 @@ mkdir -p "$BIN_DIR"
 # ---------------------------
 download_and_extract() {
     local url="$1"
-    local target="$BIN_DIR/$2"
+    local target="$TOOLS_DIR/$2"
+    local set_permissions="${3:-false}"
+
+    local file_name=$(basename "$url")
 
     if [ -f "$target" ]; then
         echo "✅ $target already exists, skipping download"
@@ -23,58 +101,80 @@ download_and_extract() {
     fi
 
     echo "⬇️ Downloading and extracting $2..."
-    curl -L "$url" | tar -xz -C "$BIN_DIR"
-    chmod +x "$target"
+
+    local extension="${file_name##*.}"
+
+    if [[ "$file_name" == *.tar.gz ]]; then
+        extension="tar.gz"
+    elif [[ "$file_name" == *.tar.bz2 ]]; then
+        extension="tar.bz2"
+    elif [[ "$file_name" == *.tar.xz ]]; then
+        extension="tar.xz"
+    fi
+
+    echo "📦 Extracting file_name file..."
+
+    case "$extension" in
+        "tar.gz" | "tgz")
+            curl -L "$url" | tar -xz -C "$TOOLS_DIR"
+            ;;
+        "tar.bz2" | "tbz")
+            curl -L "$url" | tar -xj -C "$TOOLS_DIR"
+            ;;
+        "tar.xz")
+            curl -L "$url" | tar -xj -C "$TOOLS_DIR"
+            ;;
+        "zip")
+            curl -L "$url" | funzip | unzip -d "$TOOLS_DIR"
+            ;;
+        *)
+            echo "❌ Unsupported file format: $file_name"
+            return 1
+            ;;
+    esac
+
+    if [ "$set_permissions" == "true" ]; then
+        chmod +x "$target"
+    fi
+
     echo "✅ $2 download and extraction completed"
 }
 
-# ---------------------------
-# Function: download_and_pipe_php
-# Arguments:
-#   1 - URL
-#   2 - Target file name
-#   3 - PHP executable path
-# ---------------------------
-download_and_pipe_php() {
+download_composer() {
     local url="$1"
-    local target="$BIN_DIR/$2"
-    local php_exec="$3"
+    local target="$TOOLS_DIR/composer"
+    local php_exec="$2"
 
     if [ -f "$target" ]; then
         echo "✅ $target already exists, skipping download"
         return
     fi
 
-    echo "⬇️ Installing $2 using downloaded PHP..."
-    curl -fsSL "$url" | "$php_exec" -- --install-dir="$BIN_DIR" --filename="$2"
+    echo "⬇️ Installing composer using downloaded PHP..."
+    curl -fsSL "$url" | "$php_exec" -- --install-dir="$TOOLS_DIR" --filename="composer"
     chmod +x "$target"
     echo "✅ $2 installed"
 }
 
-# ---------------------------
-# Main
-# ---------------------------
+OS=$(get_os)
+ARCH=$(get_arch)
+PHP_VERSION=$(get_php_version)
 
-# PHP CLI
-download_and_extract \
-    "https://dl.static-php.dev/static-php-cli/bulk/php-8.4.13-cli-linux-x86_64.tar.gz" \
-    "php" \
-    "php-8.4.13-cli-linux-x86_64/php"
+# Micro
+php_micro_download_link=$(get_download_link "https://dl.static-php.dev/static-php-cli/bulk/?format=json" "micro" "$OS" "$ARCH" "$PHP_VERSION")
+download_and_extract "$php_micro_download_link" "micro.sfx"
 
-# SPC
+# PHP-CLI
+php_cli_download_link=$(get_download_link "https://dl.static-php.dev/static-php-cli/bulk/?format=json" "cli" "$OS" "$ARCH" "$PHP_VERSION")
+download_and_extract "$php_cli_download_link" "php" "true"
+
+#SPC
 download_and_extract \
     "https://dl.static-php.dev/static-php-cli/spc-bin/nightly/spc-linux-x86_64.tar.gz" \
     "spc" \
-    "spc-linux-x86_64/spc"
-
-# skernel
-download_and_extract \
-    "https://github.com/wheakerd/skernel/releases/latest/download/skernel.tar.gz" \
-    "skernel" \
-    "skernel"
+    "true"
 
 # Composer
-download_and_pipe_php \
+download_composer \
     "https://getcomposer.org/installer" \
-    "composer" \
-    "$BIN_DIR/php"
+    "$TOOLS_DIR/php"

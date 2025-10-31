@@ -1,0 +1,43 @@
+{
+    "description": "Project template for the SuperKernel framework.",
+    "type": "project",
+    "license": "MIT",
+    "scripts": {
+        "dev": [
+            "@composer skernel serve",
+            "cd target/runtime && php bin.php package --debug"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.4",
+        "ext-swoole": ">=6.0",
+        "ext-zlib": "*",
+        "composer/composer": "*",
+        "guzzlehttp/guzzle": "*",
+        "nikic/php-parser": "*",
+        "super-kernel/attribute": "*",
+        "super-kernel/command": "*",
+        "super-kernel/di": "*",
+        "super-kernel/event": "*",
+        "super-kernel/event-dispatcher": "*",
+        "super-kernel/logger": "*"
+    },
+    "require-dev": {
+        "swoole/ide-helper": "^6.0"
+    },
+    "extra": {
+        "name": "pre_skernel",
+        "skernel": {
+            "name": "skernel"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

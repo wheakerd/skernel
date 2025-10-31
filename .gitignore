@@ -1,7 +1,6 @@
 .idea/
 .git/
 .vscode/
-composer.lock
-bin/
-target/*
-vendor/
+tools/
+build/
+log/

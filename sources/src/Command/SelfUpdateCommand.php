@@ -11,15 +11,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function json_decode;
 
-#[AsCommand(
-	name       : 'self-update',
-	description: '',
-)]
+
+//#[AsCommand(
+//	name       : 'self-update',
+//	description: '',
+//)]
 final class SelfUpdateCommand extends Command
 {
 	private string $releaseUri = 'https://api.github.com/repos/wheakerd/skernel/releases/latest';
 
-	private string $destinationFile = '/usr/bin/skernel';
+	private string $destinationFile = '/usr/local/bin/skernel';
 
 	public function execute(InputInterface $input, OutputInterface $output): int
 	{

@@ -5,11 +5,11 @@ namespace Src\Provider;
 
 use Composer\Composer;
 use Composer\IO\NullIO;
-use SuperKernel\Attribute\Contract;
 use SuperKernel\Attribute\Factory;
+use SuperKernel\Attribute\Provider;
 
 #[
-	Contract(Composer::class),
+	Provider(Composer::class),
 	Factory,
 ]
 final class ComposerProvider

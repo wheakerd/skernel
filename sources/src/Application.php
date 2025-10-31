@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Src;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use SuperKernel\Attribute\Contract;
+use SuperKernel\Attribute\Provider;
 use SuperKernel\Contract\ApplicationInterface;
 use SuperKernel\Event\BootApplication;
 use Symfony\Component\Console\Application as SymfonyApplication;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
-#[Contract(ApplicationInterface::class)]
+#[Provider(ApplicationInterface::class)]
 final class Application extends SymfonyApplication implements ApplicationInterface
 {
 	private string $logo = <<<LOGO
@@ -31,7 +31,7 @@ LOGO;
 
 	public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
 	{
-		parent::__construct('SuperKernel', '1.0.0');
+		parent::__construct('SKernel', '0.0.1');
 	}
 
 	public function getHelp(): string
