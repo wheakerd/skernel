@@ -1,41 +1,111 @@
-# skernel - Super-Kernel Tool
+<p align="right">
+  <strong>English</strong> | <a href="README.zh-CN.md">中文文档</a>
+</p>
 
-## Introduction
+<div align="center">
 
-`skernel` is a versatile tool designed to simplify the process of building PHP binaries and PHAR archives for Super
-Kernel framework projects. It provides a simple command-line interface (CLI) to handle build tasks and supports a range
-of options for different use cases.
+# 🧠 skernel
+
+**Official Build & Bootstrap Tool for the Super-Kernel Framework**
+
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-%3E%3D8.4-777bb4.svg?logo=php)](https://www.php.net)
+[![Super-Kernel](https://img.shields.io/badge/framework-super--kernel-blue.svg)](https://github.com/wheakerd/super-kernel)
+[![Platform](https://img.shields.io/badge/platform-linux-lightgrey.svg?logo=linux)](https://www.kernel.org)
+
+> Build with consistency, execute with determinism, eliminate chaos.  
+> **skernel is the official build and bootstrap tool for the Super-Kernel framework.**
+
+</div>
 
 ---
 
-## 🚀 Features
+## 🧩 Introduction
 
-- **Executable Binaries**: Generates ready-to-run binaries for Super Kernel framework projects without the need for a
-  PHP installation.
-- **PHAR Archive Generation**: Generates PHAR archives for Super Kernel framework projects, simplifying deployment and
-  distribution.
-- **Autoloader**: The generated PHAR file includes an autoloader for seamless project deployment.
-- **Class Diagrams and Annotations**: Automatically generates class diagrams and annotations for your project to improve
-  maintainability and eliminate redundant work.
-- **Skip File Parsing Errors**: Skips file parsing errors to avoid interruptions, especially when dealing with
-  non-critical issues.
-- **Loading Development Dependencies**: Allows you to load development dependencies to increase the flexibility of your
-  development environment.
+`skernel` is the **dedicated build and bootstrap tool** for the **Super-Kernel framework**, designed to:
 
-## ⚡ Performance Improvements
+- **Unify execution forms** – every execution must originate from a build artifact.
+- **Enforce strict development discipline** – purely OOP / AOP, no procedural code.
+- **Eliminate runtime uncertainty** – all logic is resolved during the build phase.
 
-- Improved tool execution efficiency, reduced archive memory usage, and improved overall performance.
-- Optimized the autoloader and class diagram generation process to provide faster and more accurate results.
+It generates:
 
-## 🛠 Installation
+- ⚙️ Executable PHP binaries
+- 📦 PHAR archives
 
-```shell
-curl -s https://api.github.com/repos/wheakerd/skernel/releases/latest | jq -r '.assets[] | select(.name | test("skernel$")) | .browser_download_url' | xargs -I {} curl -sL {} | sudo tee /usr/bin/skernel > /dev/null && sudo chmod 755 /usr/bin/skernel
+---
+
+## 🧭 Core Principles
+
+- **No runtime code generation**  
+  All logic and metadata must be finalized at build time. Runtime code creation or modification is forbidden.
+
+- **OOP / AOP oriented**  
+  Only object-oriented and aspect-oriented design is allowed. Procedural logic and global states are prohibited.
+
+- **Unified bootstrap flow**  
+  Every execution must pass through the `skernel` bootstrap process.  
+  Manual control over entrypoints, configurations, or loaders is disallowed.
+
+- **Strict PHP configuration boundaries**  
+  PHP behaviors must be configured via `php.ini`.  
+  Any runtime configuration changes (`ini_set()`, `error_reporting()`, etc.) are considered violations.
+
+- **Super-Kernel exclusive support**  
+  `skernel` performs automatic classmap scanning, annotation collection, AOP weaving, loader generation, and build
+  integrity verification during build time.
+
+- **Annotation stripping & trace optimization**  
+  All annotations are removed from build outputs to minimize size and improve performance.  
+  Exceptions and logs trace class names, not file paths.
+
+---
+
+## ⚙️ Features
+
+| Feature                            | Description                                                  |
+|------------------------------------|--------------------------------------------------------------|
+| 🧱 **Unified Build Output**        | Build executable binaries and PHAR archives                  |
+| 🔗 **Automatic Bootstrap**         | Generate unified entrypoint and loader                       |
+| 🧭 **AOP Support**                 | Automatic annotation scanning and aspect weaving             |
+| 🪶 **Annotation Stripping**        | Reduce size and improve execution speed                      |
+| 💥 **Configuration Isolation**     | All settings are managed through php.ini                     |
+| 🧩 **Classmap & Dependency Graph** | Automatically generate class diagrams and dependency indexes |
+| 🛡 **Secure & Controlled**         | Prevent runtime code injection and configuration changes     |
+
+---
+
+## ⚡ Performance Optimizations
+
+- Significant performance improvements in build phase
+- Reduced PHAR memory usage
+- Parallelized classmap and scanning mechanisms
+- Fault-tolerant build pipeline — continues even on non-critical errors
+
+---
+
+## 🧰 Installation
+
+### Install from GitHub Releases
+
+Visit:
+
+👉 [**wheakerd/skernel - Releases**](https://github.com/wheakerd/skernel/releases)
+
+Download the binary that matches your architecture (e.g. `skernel-x86_64` or `skernel-aarch64`), then run:
+
+```bash
+chmod +x skernel
+sudo mv skernel /usr/local/bin/
 ```
 
-## 📢 Usage
+Verify installation:
 
-### Available Commands:
+```bash
+skernel
+```
+
+## 📢 Example
 
 ```text
 build Builds a binary or PHAR archive.
@@ -46,9 +116,25 @@ Usage:
 Options:
       --disable-binary  Disable binary build, only build the PHAR archive.
       --dev             Use `require-dev` requirements from `composer.json`.
-      --debug           Enable debug mode to provide more detailed logs.
+      --debug           Enable debug mode for detailed logs.
 ```
 
 ## 📋 License
 
-The `skernel` is open-source software licensed under the MIT license.
+This project is released under the MIT License.
+You are free to use, modify, and distribute it, provided that the original license notice is retained.
+
+## 💡 Philosophy
+
+> “Above the framework, there shall be no chaos.”
+>
+> `skernel` is not merely a build tool — it is the guardian of the Super-Kernel worldview.
+>
+> It rejects dynamics and uncertainty, leaving behind a reproducible, verifiable, and deterministic runtime.
+>
+> Any logic not permitted by the build artifact is beyond the boundary.
+
+<div align="center">
+🌀 skernel is developed and maintained by <a href="https://github.com/wheakerd" target="_blank">wheakerd</a>.
+Visit <a href="https://github.com/wheakerd/skernel" target="_blank">https://github.com/wheakerd/skernel</a> for more information.
+</div>
