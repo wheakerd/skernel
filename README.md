@@ -136,5 +136,6 @@ You are free to use, modify, and distribute it, provided that the original licen
 
 <div align="center">
 🌀 skernel is developed and maintained by <a href="https://github.com/wheakerd" target="_blank">wheakerd</a>.
+<br />
 Visit <a href="https://github.com/wheakerd/skernel" target="_blank">https://github.com/wheakerd/skernel</a> for more information.
 </div>

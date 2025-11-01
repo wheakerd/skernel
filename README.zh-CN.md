@@ -120,5 +120,6 @@ Options:
 
 <div align="center">
 🌀 skernel 由 <a href="https://github.com/wheakerd" target="_blank">wheakerd</a> 开发与维护。  
+<br />
 访问 <a href="https://github.com/wheakerd/skernel" target="_blank">https://github.com/wheakerd/skernel</a> 获取更多信息。
 </div>
